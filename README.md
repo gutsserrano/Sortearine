@@ -1,42 +1,61 @@
-# Sortearine MVP (estatico)
+# Sortearine MVP (Vercel Ready)
 
-MVP de roleta para sorteio, 100% estatico, pronto para GitHub Pages:
+Projeto de roleta de sorteio com:
 
 - importacao de nomes por texto, CSV ou TXT
-- sorteio justo no navegador com `crypto.getRandomValues`
-- animacao da roleta no frontend
+- frontend estatico em `public`
+- API serverless em `api`
+- sorteio justo usando `crypto.randomInt`
 
 ## Estrutura
 
-- `frontend`: HTML, CSS e JavaScript puro (site estatico)
-- `backend`: opcional para evolucao futura (nao necessario nesta versao)
+- `public`: interface web (HTML, CSS, JS)
+- `api`: funcoes serverless da Vercel
+- `api/draw.js`: endpoint de sorteio
+- `api/health.js`: endpoint de health check
 
-## Como rodar localmente
+## Executar com npm
 
-Abra `frontend/index.html` no navegador.
-
-Se preferir um servidor local:
+Na raiz do projeto:
 
 ```bash
-cd frontend
-npx serve .
+npm install
+npm run dev
 ```
 
-## Deploy no GitHub Pages
+Isso sobe o projeto com `vercel dev`.
 
-### Opcao simples (publicar pasta `frontend`)
+## Deploy na Vercel
 
-1. Suba o projeto para um repositorio no GitHub.
-2. Em `Settings > Pages`, escolha:
-   - `Source`: `Deploy from a branch`
-   - `Branch`: `main` (ou `master`)
-   - `Folder`: `/frontend`
-3. Salve e aguarde o link do Pages ser gerado.
+1. Suba o repositorio no GitHub.
+2. Importe o projeto na Vercel.
+3. Deploy automatico (sem ajustes extras de build).
 
-### Opcao alternativa (raiz do repositorio)
+## Endpoints
 
-Se preferir publicar pela raiz, mova os arquivos de `frontend` para a raiz do repositorio e selecione `/ (root)` no Pages.
+- `GET /api/health`
+- `POST /api/draw`
+
+Body:
+
+```json
+{
+  "participants": ["Ana", "Bruno", "Carla"]
+}
+```
+
+Resposta:
+
+```json
+{
+  "drawId": "uuid",
+  "winner": "Bruno",
+  "winnerIndex": 1,
+  "participantsCount": 3,
+  "generatedAt": "2026-01-01T00:00:00.000Z"
+}
+```
 
 ## Proximo passo para WhatsApp
 
-Para integrar captura automatica via WhatsApp oficial, voce pode evoluir para WhatsApp Business Cloud API com webhook no backend. Para um fluxo gratis e simples, compartilhe no WhatsApp um link de inscricao e use os nomes coletados na roleta.
+Integrar WhatsApp Business Cloud API via webhook para preencher a lista de participantes automaticamente antes do sorteio.

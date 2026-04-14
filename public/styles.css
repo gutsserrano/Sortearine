@@ -1,0 +1,160 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f172a;
+  --card: #111827;
+  --card-2: #1f2937;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --primary: #22c55e;
+  --primary-hover: #16a34a;
+  --danger: #f43f5e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 60%);
+  color: var(--text);
+}
+
+.container {
+  width: min(1100px, 92vw);
+  margin: 24px auto;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 920px) {
+  .container {
+    grid-template-columns: minmax(300px, 1fr) minmax(420px, 1fr);
+    align-items: start;
+  }
+}
+
+.card {
+  background: linear-gradient(160deg, var(--card), var(--card-2));
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 180px;
+  border-radius: 10px;
+  border: 1px solid #475569;
+  padding: 10px;
+  background: #0b1220;
+  color: var(--text);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+@media (min-width: 500px) {
+  .actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .actions .primary {
+    grid-column: 1 / -1;
+  }
+}
+
+button,
+input[type="file"] {
+  width: 100%;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button.primary {
+  background: var(--primary);
+  color: #052e16;
+}
+
+button.primary:hover {
+  background: var(--primary-hover);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#participantsInfo {
+  color: var(--muted);
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.result {
+  min-height: 24px;
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+
+.result.error {
+  color: var(--danger);
+}
+
+.wheel-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 540px;
+}
+
+.pointer {
+  width: 0;
+  height: 0;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-top: 30px solid #f8fafc;
+  position: absolute;
+  top: 12px;
+  z-index: 5;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+#wheelCanvas {
+  width: min(90vw, 500px);
+  height: min(90vw, 500px);
+  border-radius: 50%;
+  background: #0b1220;
+  border: 2px solid #334155;
+}

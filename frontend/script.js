@@ -1,3 +1,5 @@
+const API_BASE_URL = "";
+
 const participantsInput = document.getElementById("participantsInput");
 const csvInput = document.getElementById("csvInput");
 const loadCsvBtn = document.getElementById("loadCsvBtn");
@@ -128,37 +130,6 @@ function setResult(message, isError) {
   resultElement.classList.toggle("error", Boolean(isError));
 }
 
-function secureRandomIndex(maxExclusive) {
-  if (!Number.isInteger(maxExclusive) || maxExclusive <= 0) {
-    throw new Error("maxExclusive inválido para sorteio.");
-  }
-
-  if (window.crypto?.getRandomValues) {
-    const randomArray = new Uint32Array(1);
-    const maxUint32 = 0x100000000;
-    const limit = maxUint32 - (maxUint32 % maxExclusive);
-
-    let randomNumber;
-    do {
-      window.crypto.getRandomValues(randomArray);
-      randomNumber = randomArray[0];
-    } while (randomNumber >= limit);
-
-    return randomNumber % maxExclusive;
-  }
-
-  return Math.floor(Math.random() * maxExclusive);
-}
-
-function generateDrawId() {
-  if (window.crypto?.randomUUID) {
-    return window.crypto.randomUUID();
-  }
-
-  const randomPart = Math.random().toString(36).slice(2, 10);
-  return `draw-${Date.now()}-${randomPart}`;
-}
-
 function animateToWinner(participants, winnerIndex) {
   return new Promise((resolve) => {
     const total = participants.length;
@@ -209,13 +180,22 @@ async function performDraw() {
     drawBtn.disabled = true;
     setResult("Realizando sorteio...", false);
 
-    const winnerIndex = secureRandomIndex(participants.length);
-    const winner = participants[winnerIndex];
-    const drawId = generateDrawId();
-    await animateToWinner(participants, winnerIndex);
+    const response = await fetch(`${API_BASE_URL}/api/draw`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ participants })
+    });
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      throw new Error(payload.message || "Erro ao sortear.");
+    }
+
+    const payload = await response.json();
+    await animateToWinner(participants, payload.winnerIndex);
 
     setResult(
-      `Vencedor: ${winner} | Sorteio #${drawId.slice(0, 8)}`,
+      `Vencedor: ${payload.winner} | Sorteio #${payload.drawId.slice(0, 8)}`,
       false
     );
   } catch (error) {
